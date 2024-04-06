@@ -1,3 +1,6 @@
 spring:
   application:
     name: sample-mybatis-plugin
+logging:
+  level:
+    dev.daisuzz.samplemybatisplugin: debug
