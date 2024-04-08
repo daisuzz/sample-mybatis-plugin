@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 import java.util.logging.Logger
 
 /**
- * log message on pre and post-processing
+ * log sql on pre and post-processing
  */
 @Component
 @Intercepts(
@@ -22,12 +22,15 @@ import java.util.logging.Logger
         args = [MappedStatement::class, Any::class, RowBounds::class, ResultHandler::class]
     )
 )
-class StdoutInterceptor : Interceptor {
+class QueryInterceptor : Interceptor {
     override fun intercept(invocation: Invocation): Any {
 
-        logger.info("pre-processing.")
+        val statement = invocation.args[0] as MappedStatement
+        val parameter = invocation.args[1]
+        val boundSql = statement.sqlSource.getBoundSql(parameter)
+        logger.info("SQL: ${boundSql.sql}")
+
         val returnObject = invocation.proceed()
-        logger.info("post-processing.")
 
         return returnObject
     }
